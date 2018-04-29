@@ -120,7 +120,7 @@ class PlayerClass {
         Pre-condition: None
         Post-condition: The dynamic memory has been properly deallocated
         */
-        ~PlayerClass();
+        //~PlayerClass();
 
         /*
         Narrative: Returns the player's name
@@ -239,14 +239,14 @@ class PlayerClass {
         Pre-condition:
         Post-condition:
         */
-        int Lookup_Impact(int power) const;
+        int ImpactIndex(int roll, int power) const;
 
         /*
         Narrative:
         Pre-condition:
         Post-condition:
         */
-        int Lookup_Wound(int willpower) const;
+        int WoundIndex(int willpower) const;
 
         /*
         Narrative: Sets the player's state to active if the player is alive

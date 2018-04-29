@@ -73,10 +73,6 @@ void PlayerClass::CopyIntoMe(const PlayerClass &p) {
     }
 }
 
-PlayerClass::~PlayerClass() {
-
-}
-
 string PlayerClass::ValidateName(string initName) {
     if (initName.size() <= 0)
         initName = DEFAULT_NAME;
@@ -350,15 +346,17 @@ int PlayerClass::Impact() const{
     if (IsActive()) {
         int roll = Dice::Roll(Name(), GameSpace::IMPACT, 2, 6);
         if (roll >= 2 && roll <= 12) { 
-            //if (HasWeapon())
-                //power = playerWeapon->WeaponPower();
             if (varStats[POWER] >= 2)
                 power = varStats[POWER];
             if ((varStats[POWER] <= 12 && varStats[POWER] >= 2) && (roll >= 2 && roll <= 12))
-                impact = IMPACT_TABLE[roll][power]; 
+                impact = ImpactIndex(roll, power); 
         }
     }
     return impact;
+}
+
+int PlayerClass::ImpactIndex(int roll, int power) const {
+    return IMPACT_TABLE[roll][power];
 }
 
 bool PlayerClass::CriticalWound() {
