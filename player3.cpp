@@ -73,10 +73,10 @@ void PlayerClass::CopyIntoMe(const PlayerClass &p) {
     }
 }
 
+PlayerClass::~PlayerClass() {
+}
+
 string PlayerClass::ValidateName(string initName) {
-    if (initName.size() <= 0)
-        initName = DEFAULT_NAME;
-    else {
         string trimmed;
         stringstream ss(initName);
         string word;
@@ -88,7 +88,9 @@ string PlayerClass::ValidateName(string initName) {
         if (trimmed.length() > 10)
             trimmed = trimmed.substr(0, 10);
         initName = trimmed;
-    }
+        
+        if (initName.size() <= 0)
+            throw INVALID_NAME;
     return initName;
 }
 
@@ -267,7 +269,8 @@ bool PlayerClass::SetCell(int newRow, int newCol) {
         varStats[ROW] = newRow;
         varStats[COL] = newCol;
         set = true;
-    }
+    } else
+        throw INVALID_CELL;
     return set;
 }
 
@@ -276,33 +279,29 @@ bool PlayerClass::SetDir(DirType newDir) {
     if (newDir >= GameSpace::NORTH && newDir <= GameSpace::WEST) {
         varStats[DIR] = newDir;
         set = true;
-    }
+    } else
+        throw INVALID_DIR;
     return set;
 }
 
 void PlayerClass::Write(ostream& out) const {
     if (IsActive())
         out << '1';
-    else
+    else 
         out << '0';
-    out << '#' << Name() << '#' << '(' << Row() << ',' << Col() << ',' << Dir()
-    << ")#" << Health() << '#' << WillPower() << '#' << Power() << '#' 
-    << CurrentSpeed() << '#' << Momentum() << '#' << STATS[PD_NUM_DIE] 
-    << 'D' << STATS[PD_FACES] << '#' << Defense() << '#' << endl;
-    /*
-    if (Human()) {
-        if (HasWeapon()) {
-            out << WeaponName() << '#' <<
-            varStats[CUR_WPN_SKILL] << '#' << endl << '\t';
-        } else
-            out << endl << '\t';
-        for (int i=0; i<Weapon::NUM_DIFF_WEAPONS; i++) {
-            if (allWeaponSkill[i] > 0) {
-                out << Weapon::WpnTypeToStr(Weapon::WpnType(i)) << '#' << allWeaponSkill[i] << '#';
-            }
-        }
-        out << endl;
-    */
+    out << '#' << Name() << '#' << '(' 
+        << Row() << ',' 
+        << Col() << ',' 
+        << Dir() << ")#" 
+        << Health() << '#' 
+        << WillPower() << '#' 
+        << Power() << '#' 
+        << CurrentSpeed() << '#' 
+        << Momentum() << '#' 
+        << STATS[PD_NUM_DIE] << 'D' 
+        << STATS[PD_FACES] << '#' 
+        << Defense() << '#';
+    return;
 }
 
 ostream& operator<<(ostream& out, const PlayerClass *p) {
@@ -330,26 +329,20 @@ int PlayerClass::HitScore() const {
 int PlayerClass::HitDamage() const {
     int damage = 0;
 
-    if (IsActive()) {
-        //if (HasWeapon()) {
-            //damage = varStats[CUR_WPN_SKILL] + playerWeapon->RollWeaponDamage(Name());
-        //} else {
-            damage = varStats[POWER] + RollPhysDam();
-        //}
-    }
+    if (IsActive())
+        damage = varStats[POWER] + RollPhysDam();
+    
     return damage;
 }
 
 int PlayerClass::Impact() const{
     int impact = 0;
-    int power;
     if (IsActive()) {
         int roll = Dice::Roll(Name(), GameSpace::IMPACT, 2, 6);
         if (roll >= 2 && roll <= 12) { 
-            if (varStats[POWER] >= 2)
-                power = varStats[POWER];
-            if ((varStats[POWER] <= 12 && varStats[POWER] >= 2) && (roll >= 2 && roll <= 12))
-                impact = ImpactIndex(roll, power); 
+            if ((varStats[POWER] <= 12 && varStats[POWER] >= 2) && (roll >= 2 && roll <= 12)) {
+                impact = ImpactIndex(roll, varStats[POWER]); 
+            }
         }
     }
     return impact;

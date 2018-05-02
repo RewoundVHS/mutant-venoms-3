@@ -34,14 +34,7 @@ class Venom: public PlayerClass {
 
 };
 
-#endif
-
 //********************************** Frog *************************************
-
-#ifndef _FROG
-#define _FROG
-
-#include "player3.h"
 
 class Frog: public Venom {
 
@@ -57,15 +50,17 @@ class Frog: public Venom {
         Precondition: None
         Postcondition: Type string has been returned
         */
-        static string TypeStr();
+        virtual string TypeStr() const;
         
         /*
         Narrative: Adds the frog type string to the stream and sends it to
         Venom's Write function
-        Precondition: Human and Venom output streams are correct
+        Precondition: Player and Venom output streams are correct
         Postcondition: Type string has been added to the stream and returned
         */
         void Write(ostream &out) const;
+        
+        virtual bool IsMyEnemy(const PlayerClass *p) const;
 
     private:
         
@@ -85,14 +80,7 @@ class Frog: public Venom {
 
 };
 
-#endif
-
 //******************************** Spider *************************************
-
-#ifndef _SPIDER
-#define _SPIDER
-
-#include "player3.h"
 
 class Spider: public Venom {
 
@@ -108,15 +96,17 @@ class Spider: public Venom {
         Precondition: None
         Postcondition: Type string has been returned
         */
-        static string TypeStr();
+        virtual string TypeStr() const;
         
         /*
-        Narrative: Adds the frog type string to the stream and sends it to
+        Narrative: Adds the spider type string to the stream and sends it to
         Venom's Write function
-        Precondition: Human and Venom output streams are correct
+        Precondition: Player and Venom output streams are correct
         Postcondition: Type string has been added to the stream and returned
         */
         void Write(ostream &out) const;
+        
+        virtual bool IsMyEnemy(const PlayerClass *p) const;
 
     private:
         
@@ -136,14 +126,7 @@ class Spider: public Venom {
 
 };
 
-#endif
-
 //******************************** Viper **************************************
-
-#ifndef _VIPER
-#define _VIPER
-
-#include "player3.h"
 
 class Viper: public Venom {
 
@@ -159,15 +142,17 @@ class Viper: public Venom {
         Precondition: None
         Postcondition: Type string has been returned
         */
-        static string TypeStr();
+        virtual string TypeStr() const;
         
         /*
-        Narrative: Adds the frog type string to the stream and sends it to
+        Narrative: Adds the viper type string to the stream and sends it to
         Venom's Write function
-        Precondition: Human and Venom output streams are correct
+        Precondition: Player and Venom output streams are correct
         Postcondition: Type string has been added to the stream and returned
         */
         void Write(ostream &out) const;
+        
+        virtual bool IsMyEnemy(const PlayerClass *p) const;
 
     private:
         

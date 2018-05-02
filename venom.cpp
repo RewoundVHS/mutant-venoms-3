@@ -15,6 +15,7 @@ Venom::Venom(const string initName, const int INIT_VAR_STATS[], const int INIT_C
 
 void Venom::Write(ostream &out) const{
     PlayerClass::Write(out);
+    out << endl;
 }
 
 //********************************** Frog *************************************
@@ -33,7 +34,7 @@ Frog::Frog(const string initName):
     Venom(initName, INIT_VAR_STATS, INIT_CONST_STATS) {
 }
 
-string Frog::TypeStr() {
+string Frog::TypeStr() const {
     return TYPE_STR;
 }
 
@@ -44,6 +45,17 @@ Frog::Frog():
 void Frog::Write(ostream &out) const {
     out << TypeStr() << '#';
     Venom::Write(out);
+}
+
+bool Frog::IsMyEnemy(const PlayerClass* p) const {
+    bool isEnemy = false;
+    
+    if (p != NULL) {
+        if (typeid(*p) != typeid(Frog));
+            isEnemy = true;
+    }
+    
+    return isEnemy;
 }
 
 //******************************** Spider *************************************
@@ -62,7 +74,7 @@ Spider::Spider(const string initName):
     Venom(initName, INIT_VAR_STATS, INIT_CONST_STATS) {
 }
 
-string Spider::TypeStr() {
+string Spider::TypeStr() const {
     return TYPE_STR;
 }
 
@@ -73,6 +85,17 @@ Spider::Spider():
 void Spider::Write(ostream &out) const {
     out << TypeStr() << '#';
     Venom::Write(out);
+}
+
+bool Spider::IsMyEnemy(const PlayerClass* p) const {
+    bool isEnemy = false;
+    
+    if (p != NULL) {
+        if (typeid(*p) != typeid(Spider));
+            isEnemy = true;
+    }
+    
+    return isEnemy;
 }
 
 //********************************* Viper *************************************
@@ -91,7 +114,7 @@ Viper::Viper(const string initName):
     Venom(initName, INIT_VAR_STATS, INIT_CONST_STATS) {
 }
 
-string Viper::TypeStr() {
+string Viper::TypeStr() const {
     return TYPE_STR;
 }
 
@@ -102,4 +125,15 @@ Viper::Viper():
 void Viper::Write(ostream &out) const {
     out << TypeStr() << '#';
     Venom::Write(out);
+}
+
+bool Viper::IsMyEnemy(const PlayerClass* p) const {
+    bool isEnemy = false;
+    
+    if (p != NULL) {
+        if (typeid(*p) != typeid(Viper));
+            isEnemy = true;
+    }
+    
+    return isEnemy;
 }

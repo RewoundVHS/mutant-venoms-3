@@ -1,11 +1,12 @@
 // Neve Laughery
 // CSCI330
 
-#ifndef _PLAYER
-#define _PLAYER
+#ifndef _PLAYERH
+#define _PLAYERH
 
 #include <string>
 #include <iostream>
+#include <typeinfo>
 #include <sstream>
 #include "gamespace.h"
 #include "dice.h"
@@ -17,6 +18,7 @@ using namespace GameSpace;
 class PlayerClass {
 
     public:
+        
         enum PlayerType {
             HUNTER,
             SCAVENGER,
@@ -55,7 +57,47 @@ class PlayerClass {
         static const int PC_NUM_STATS = 10;
         static const int PC_NUM_CONST_STATS = 4;
         
+        
+        /*
+        Narrative: Initializes an instance of the player class
+        */
+        PlayerClass(const string initName, const int INIT_CONST_STATS[], 
+                    const int INIT_VAR_STATS[]);
+        
+        /*
+        Narrative: Returns the Player's type string
+        Pre-condition: None
+        Post-condition: Type string has been returned
+        */
+        virtual string TypeStr() const = 0;
+        
+        virtual bool IsMyEnemy(const PlayerClass *p) const = 0;
+        
+        /*
+        Narrative: Checks to see if this instance is not the same as the given 
+        player then calls CopyIntoMe on the given instance of a player class to 
+        copy into this instance
+        Pre-condition: None
+        Post-condition: The player class has been copied into this player class
+        */
+        PlayerClass& operator=(const PlayerClass &p);
+        
+        /*
+        Narrative:
+        Pre-condition:
+        Post-condition:
+        */
+        int ImpactIndex(int roll, int power) const;
+
+        /*
+        Narrative:
+        Pre-condition:
+        Post-condition:
+        */
+        int WoundIndex(int willpower) const;
+        
     private:
+        
         static const int DEAD_THRESHOLD = 0;
         static const int MAX_NAME_SIZE = 10;
         static const int DICE [GameSpace::NUM_ROLLTYPE][3];
@@ -66,7 +108,7 @@ class PlayerClass {
         static const int NUM_HUMAN_TYPES = 2;
         static const int w;
         static const int k;
-        static const int INIT_WPN_SKILL[Weapon::NUM_DIFF_WEAPONS];
+        //static const int INIT_WPN_SKILL[Weapon::NUM_DIFF_WEAPONS];
         static const int IMPACT_TABLE[MAX_2D6][MAX_PWR];  
         static const int WOUND_TABLE[MAX_2D6][MAX_WILL];
         static const string DEFAULT_NAME;
@@ -101,26 +143,13 @@ class PlayerClass {
         void CopyIntoMe(const PlayerClass &p);
 
     public:
-        /*
-        Narrative: Initializes an instance of the player class
-        */
-        PlayerClass(const string initName, const int INIT_CONST_STATS[], const int INIT_VAR_STATS[]);
-
-        /*
-        Narrative: Checks to see if this instance is not the same as the given 
-        player then calls CopyIntoMe on the given instance of a player class to 
-        copy into this instance
-        Pre-condition: None
-        Post-condition: The player class has been copied into this player class
-        */
-        PlayerClass& operator=(const PlayerClass &p);
 
         /*
         Narrative: This destructor deallocates the dynamic memory for playerWeapon
         Pre-condition: None
         Post-condition: The dynamic memory has been properly deallocated
         */
-        //~PlayerClass();
+        ~PlayerClass();
 
         /*
         Narrative: Returns the player's name
@@ -233,20 +262,6 @@ class PlayerClass {
         Post-condition:
         */
         int RollDice(RollType roll) const;
-
-        /*
-        Narrative:
-        Pre-condition:
-        Post-condition:
-        */
-        int ImpactIndex(int roll, int power) const;
-
-        /*
-        Narrative:
-        Pre-condition:
-        Post-condition:
-        */
-        int WoundIndex(int willpower) const;
 
         /*
         Narrative: Sets the player's state to active if the player is alive
@@ -387,7 +402,7 @@ class PlayerClass {
         Pre-condition: Weapon class has been properly linked
         Post-condition: The damage is returned
         */
-        int HitDamage() const;
+        virtual int HitDamage() const;
 
         /*
         Narrative: Makes an impact roll for an active player then gets their 
@@ -397,8 +412,9 @@ class PlayerClass {
         Pre-condition: Dice class and weapon class have been properly linked.
         Post-condition: Impact table result has been returned
         */
-        int Impact() const;
+        virtual int Impact() const;
 
+        
         /*
         Narrative: The player takes a critical wound which slows them for half 
         of their speed, then a critical wound roll and their willpower are 
@@ -424,7 +440,7 @@ class PlayerClass {
         equal to the given player's name is returned
         */
         bool operator==(const PlayerClass &p) const;
-
+        
         /*
         Narrative: Compares the name of a given player and this player to see 
         if this player's name is not equal to the given player's name
@@ -476,14 +492,19 @@ class PlayerClass {
         Pre-condition: None
         Post-condition: Player's statistics have been returned 
         */
-        void Write(ostream& out) const;
+        virtual void Write(ostream& out) const;
 
     private:
-        // Array of all of the stats a player has
-        int varStats[PC_NUM_STATS];     
+        
+        // Array of all of the variable stats a player has
+        int varStats[PC_NUM_STATS]; 
+        
+        // Array of all of the constant stats a player has
         const int* const STATS;
 
-        const string NAME;    // Player's name
+        // Player's name
+        const string NAME;
+    
 };
 
 /*
